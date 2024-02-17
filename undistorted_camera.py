@@ -5,6 +5,25 @@ import os
 # Import the image
 cap = cv2.VideoCapture(0)
 
+if (cap.isOpened() == False):  
+    print("Error reading video file") 
+  
+# We need to set resolutions. 
+# so, convert them from float to integer. 
+frame_width = int(cap.get(3)) 
+frame_height = int(cap.get(4)) 
+   
+size = (1484, 585)
+
+vid_count = 0
+
+while os.path.isfile("data/camera_roll/video" + str(vid_count) + ".avi"):
+        vid_count += 1
+
+writer = cv2.VideoWriter("data/camera_roll/video" + str(vid_count) + ".avi",  
+                         cv2.VideoWriter_fourcc(*'MJPG'), 
+                         10, size) 
+
 def undistort(img):
     ret = 2.2063746245104525
     mtx = np.array([
@@ -28,30 +47,25 @@ def undistort(img):
     dst = dst[y:y+h, x:x+w]
     
     return dst
+def save_image(image):
+    count = 0
+    while os.path.isfile("data/camera_roll/image" + str(count) + ".jpg"):
+        count += 1
 
+    cv2.imwrite("data/camera_roll/image" + str(count) + ".jpg", image)
+    
 while cap.isOpened():
     ret, frame = cap.read()
-    
-    print("halsjf")
-    
     if ret:
         frame = undistort(frame)
+        cv2.imshow("camera", frame)
+        writer.write(frame)
         if cv2.waitKey(1) & 0xFF == ord('s'): 
-            image = frame
-            break
-            
-        cv2.imshow("Capture", frame)
+            save_image(frame)
         
     if cv2.waitKey(1) & 0xFF == ord('q'): 
         break
 
-
-count = 0
-
-while os.path.isfile("image" + str(count) + ".jpg"):
-    count += 1
-
-cv2.imwrite("image" + str(count) + ".jpg", image)
-
 cap.release()
+writer.release()
 cv2.destroyAllWindows()
