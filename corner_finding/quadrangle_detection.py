@@ -64,7 +64,6 @@ def find_rect(i_inp):
     i_gray = cv2.cvtColor(i_inp, cv2.COLOR_BGR2GRAY)
     i_blur = cv2.GaussianBlur(i_gray, (11, 11), 0)
     i_blur = cv2.medianBlur(i_gray, 25)
-    
 
     cv2.imshow('img', i_blur)
     cv2.waitKey(0)

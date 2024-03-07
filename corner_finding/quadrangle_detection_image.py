@@ -27,7 +27,10 @@ def undistort(img):
     
     return dst
 
-image = cv2.imread('image3.jpeg')
+image = cv2.imread('data/camera_roll/image4.jpg')
+# image = undistort(image)
+# image[:,:,0] = image[:,:,0]/255*10 #blue channel
+# image[:,:,1] = image[:,:,1]/180*150
 
 i_bin = image
 i_blur = image
@@ -46,9 +49,10 @@ def find_rect(i_inp):
     global i_bin, i_blur
     
     i_gray = cv2.cvtColor(i_inp, cv2.COLOR_BGR2GRAY)
-    i_blur = cv2.GaussianBlur(i_gray, (11, 11), 0)
-    i_blur = cv2.medianBlur(i_gray, 25)
+    i_blur = cv2.GaussianBlur(i_gray, (5, 5), 0)
+    i_blur = cv2.medianBlur(i_gray, 11)
     
+    print(i_blur)
 
     cv2.imshow('img', i_blur)
     cv2.waitKey(0)

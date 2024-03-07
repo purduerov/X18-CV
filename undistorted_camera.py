@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 # Import the image
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("/data/camera_roll/video1.avi")
 
 if (cap.isOpened() == False):  
     print("Error reading video file") 
@@ -57,7 +57,7 @@ def save_image(image):
 while cap.isOpened():
     ret, frame = cap.read()
     if ret:
-        frame = undistort(frame)
+        # frame = undistort(frame)
         cv2.imshow("camera", frame)
         writer.write(frame)
         if cv2.waitKey(1) & 0xFF == ord('s'): 

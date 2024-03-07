@@ -3,7 +3,7 @@ import numpy as np
 
 cap = cv.VideoCapture(0)
 
-counter = 0
+counter = 0 
 
 while cap.isOpened():
     ret, frame = cap.read()

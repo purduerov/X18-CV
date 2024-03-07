@@ -39,9 +39,11 @@ cv2.namedWindow('output')
 cv2.setMouseCallback('output',mouseValue)
 
 
-for i  in range(1, 10):
+# for i  in range(1, 10):
+if True:
     ret = True
-    frame = cv2.imread('data/validation/val' + str(i) + '.jpg')
+    # frame = cv2.imread('data/camera_roll/image4.jpg')
+    frame = cv2.imread('data/camera_roll/image14.jpg')
 # while cap.isOpened():
 #     ret, frame = cap.read()
     if ret:

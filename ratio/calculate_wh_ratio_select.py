@@ -163,7 +163,7 @@ def get_wh_ratio(m1, m2, m3, m4, width, height):
 
 h, w, c = image.shape
 print(image.shape)
-# print(get_wh_ratio((pts[0]), pts[1], pts[2], pts[3], w, h))
+print(get_wh_ratio((pts[0]), pts[1], pts[2], pts[3], w, h))
 """[[[ 987  213]]
 
  [[ 466  284]]
@@ -191,4 +191,4 @@ print(image.shape)
 
  [[504 535]
 """
-print(get_wh_ratio((504, 535), (743, 542), (508, 0), (771, 34), w, h))
+# print(get_wh_ratio((504, 535), (743, 542), (508, 0), (771, 34), w, h))
