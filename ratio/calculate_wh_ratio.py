@@ -1,74 +1,74 @@
 import cv2
 import numpy as np
 
-# Import the image
-# cap = cv2.VideoCapture(0)
+# # Import the image
+# # cap = cv2.VideoCapture(0)
 
-def undistort(img):
-    ret = 2.2063746245104525
-    mtx = np.array([
-        [1.09530534e+03, 0.00000000e+00, 9.54353075e+02],
-        [0.00000000e+00, 1.09011353e+03, 5.41983054e+02],
-        [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
-    ])
-    dist = np.array([[-0.32290118, 0.09774828, 0.01101426, 0.00701455, -0.01189179]])
+# def undistort(img):
+#     ret = 2.2063746245104525
+#     mtx = np.array([
+#         [1.09530534e+03, 0.00000000e+00, 9.54353075e+02],
+#         [0.00000000e+00, 1.09011353e+03, 5.41983054e+02],
+#         [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
+#     ])
+#     dist = np.array([[-0.32290118, 0.09774828, 0.01101426, 0.00701455, -0.01189179]])
 
-    h,  w = img.shape[:2]
-    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+#     h,  w = img.shape[:2]
+#     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
     
-    mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h), 5)
-    dst = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR)
-    # crop the image
-    x, y, w, h = roi
-    x = x + 50
-    y = y + 50
-    w = w - 50
-    h = h - 50
-    dst = dst[y:y+h, x:x+w]
+#     mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h), 5)
+#     dst = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR)
+#     # crop the image
+#     x, y, w, h = roi
+#     x = x + 50
+#     y = y + 50
+#     w = w - 50
+#     h = h - 50
+#     dst = dst[y:y+h, x:x+w]
     
-    return dst
+#     return dst
 
-# while cap.isOpened():
-#     ret, frame = cap.read()
+# # while cap.isOpened():
+# #     ret, frame = cap.read()
     
-#     if ret:
-#         frame = undistort(frame)
-#         if cv2.waitKey(1) & 0xFF == ord('s'): 
-#             image = frame
-#             break
+# #     if ret:
+# #         frame = undistort(frame)
+# #         if cv2.waitKey(1) & 0xFF == ord('s'): 
+# #             image = frame
+# #             break
             
-#         cv2.imshow("Capture", frame)
+# #         cv2.imshow("Capture", frame)
         
-#     if cv2.waitKey(1) & 0xFF == ord('q'): 
-#         break
+# #     if cv2.waitKey(1) & 0xFF == ord('q'): 
+# #         break
 
-# # Display the image
+# # # Display the image
 
 
-image = cv2.imread('data/camera_roll/image14.jpg')
-# image = cv2.imread('cropp.png')
+# image = cv2.imread('data/camera_roll/image14.jpg')
+# # image = cv2.imread('cropp.png')
 
-cv2.imshow('Image', image)
-# cv2.imwrite("image.jpeg", image)
+# # cv2.imshow('Image', image)
+# # cv2.imwrite("image.jpeg", image)
 
-pts = []
-# Define a mouse callback function
-def mouse_callback(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        cv2.circle(image,(x,y),10,(255,0,0),-1)
-        pts.append((x, y))
-        print('Left mouse button clicked at coordinates:', x, y)
-        cv2.imshow('Image', image)
+# pts = []
+# # Define a mouse callback function
+# def mouse_callback(event, x, y, flags, param):
+#     if event == cv2.EVENT_LBUTTONDOWN:
+#         cv2.circle(image,(x,y),10,(255,0,0),-1)
+#         pts.append((x, y))
+#         print('Left mouse button clicked at coordinates:', x, y)
+#         cv2.imshow('Image', image)
         
 
-# Set the mouse callback function
-cv2.setMouseCallback('Image', mouse_callback)
+# # Set the mouse callback function
+# cv2.setMouseCallback('Image', mouse_callback)
 
-# Wait for a key press
-cv2.waitKey(0)
+# # Wait for a key press
+# cv2.waitKey(0)
 
-# Close the window
-cv2.destroyAllWindows()
+# # Close the window
+# cv2.destroyAllWindows()
 
 # in case it matters: licensed under GPLv2 or later
 # legend:
@@ -159,10 +159,12 @@ def get_wh_ratio(m1, m2, m3, m4, width, height):
     # If someone can find the error that caused this, 
     # I would be most grateful.
     # until then:
+    if whRatio == 0:
+        return 1
     return 1 / whRatio
 
-h, w, c = image.shape
-print(image.shape)
+# h, w, c = image.shape
+# print(image.shape)
 # print(get_wh_ratio((pts[0]), pts[1], pts[2], pts[3], w, h))
 """[[[ 987  213]]
 
@@ -191,4 +193,4 @@ print(image.shape)
 
  [[504 535]
 """
-print(get_wh_ratio((504, 535), (743, 542), (508, 0), (771, 34), w, h))
+# print(get_wh_ratio((504, 535), (743, 542), (508s, 0), (771, 34), w, h))

@@ -45,8 +45,9 @@ def undistort(img):
 # # Display the image
 
 
-image = cv2.imread('data/camera_roll/image14.jpg')
-# image = cv2.imread('cropp.png')
+# image = cv2.imread('data/camera_roll/image14.jpg')
+# image = cv2.imread('data/camera_roll/image14.jpg')
+image = cv2.imread('data/struct.jpg')
 
 cv2.imshow('Image', image)
 # cv2.imwrite("image.jpeg", image)
