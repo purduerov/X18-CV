@@ -6,7 +6,7 @@ import numpy as np
 checkpoint = "vinvino02/glpn-nyu"
 depth_estimator = pipeline("depth-estimation", model=checkpoint)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('data/camera_roll/video1.avi')
 
 def mouseValue(event,x,y,flags,param):
     if event == cv2.EVENT_LBUTTONDOWN: #checks mouse left button down condition

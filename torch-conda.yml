@@ -1,0 +1,36 @@
+name: torch
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip>=19.0
+  - pytorch
+  - torchvision
+  - torchaudio
+  - jupyter
+  - scikit-learn
+  - scipy
+  - pandas
+  - pandas-datareader
+  - matplotlib
+  - pillow
+  - tqdm
+  - requests
+  - h5py
+  - pyyaml
+  - flask
+  - boto3
+  - ipykernel
+  - pip:
+      - casadi==3.6.4
+      - ezdxf==1.1.4
+      - fonttools==4.47.2
+      - multimethod==1.9.1
+      - nptyping==2.0.1
+      - numpy==1.26.3
+      - opencv-python==4.9.0.80
+      - path==16.9.0
+      - pyparsing==3.1.1
+      - typing_extensions==4.9.0
+      - typish==1.9.3

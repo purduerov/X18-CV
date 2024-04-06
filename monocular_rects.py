@@ -22,8 +22,8 @@ if model_type == "DPT_Large" or model_type == "DPT_Hybrid":
 else:
     transform = midas_transforms.small_transform
     
-# frame = cv2.imread('cropp.png')
-frame = cv2.imread('data/camera_roll/image14.jpg')
+frame = cv2.imread('cropp.png')
+# frame = cv2.imread('data/camera_roll/image14.jpg')
 
 input_batch = transform(frame).to(device)
 
@@ -37,7 +37,7 @@ with torch.no_grad():
         align_corners=False,
     ).squeeze()
     
-output = prediction.cpu().numpy() / 4096
+output = prediction.cpu().numpy() / 2048
 output = np.clip(output, a_min=0, a_max=1)
 output = output * 255
 output = output.astype(np.uint8)
