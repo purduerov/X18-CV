@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360 Photosphere</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, sphere;
+        let verticalRotationSpeed = 0.02; // speed of rotation
+        let horizontalRotationSpeed = 0.02;
+        // movement controls
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false
+        };
+        function init() {
+            // creating scene
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            // creating a sphere
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);  // internal of sphere
+            const texture = new THREE.TextureLoader().load('stitch.jpg'); // put in local path here
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            sphere = new THREE.Mesh(geometry, material); // map picture to the inside of the sphere
+            scene.add(sphere);
+            camera.position.set(0, 0, 0); // create a camera inside the sphere
+            window.addEventListener('resize', onWindowResize, false);
+            // for keyboard control
+            window.addEventListener('keydown', onKeyDown, false);
+            window.addEventListener('keyup', onKeyUp, false);
+            animate();
+        }
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        // Handle key down events
+        function onKeyDown(event) {
+            if (keys.hasOwnProperty(event.key)) {
+                keys[event.key] = true;
+            }
+        }
+        // Handle key up events
+        function onKeyUp(event) {
+            if (keys.hasOwnProperty(event.key)) {
+                keys[event.key] = false;
+            }
+        }
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            // Rotate the sphere based on key states
+            if (keys.ArrowUp) {
+                sphere.rotation.x -= verticalRotationSpeed; // Rotate up
+            }
+            if (keys.ArrowDown) {
+                sphere.rotation.x += verticalRotationSpeed; // Rotate down
+            }
+            if (keys.ArrowLeft) {
+                sphere.rotation.y -= horizontalRotationSpeed; // Rotate left
+            }
+            if (keys.ArrowRight) {
+                sphere.rotation.y += horizontalRotationSpeed; // Rotate right
+            }
+            renderer.render(scene, camera);
+        }
+        // Initialize everything
+        init();
+    </script>
+</body>
+</html>
