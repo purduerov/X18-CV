@@ -1,0 +1,10 @@
+# crab_config.yaml
+
+# 1. Class Information
+nc: 3  # Number of classes
+names: ['European_Green_Crab', 'Rock_Crab', 'Jonah_Crab']
+# Note: Ensure the order matches the class_id (0, 1, 2) used in your .txt label files.
+
+# 2. Dataset Paths (Use absolute paths or paths relative to where you run the training command)
+train: C:\Users\Owner\IdeaProjects\ROV2\X18-CV\Crab_Detection\YOLO_Crab_Detection\data\images\train
+val: C:\Users\Owner\IdeaProjects\ROV2\X18-CV\Crab_Detection\YOLO_Crab_Detection\data\images\val
