@@ -1,44 +1,37 @@
-import time
 import depthai as dai
+import numpy as np
 
-from argparse import ArgumentParser
+# 1. Setup (v3 style)
+p = dai.Pipeline()
+# 1. Create the source (StereoDepth requires Mono cameras)
+monoL = p.create(dai.node.MonoCamera)
+monoR = p.create(dai.node.MonoCamera)
+stereo = p.create(dai.node.StereoDepth)
 
-parser = ArgumentParser()
-parser.add_argument("--webSocketPort", type=int, default=8765)
-parser.add_argument("--httpPort", type=int, default=8080)
-args = parser.parse_args()
+# 2. Configure sources
+monoL.setBoardSocket(dai.CameraBoardSocket.CAM_B)
+monoR.setBoardSocket(dai.CameraBoardSocket.CAM_C)
 
-FPS = 10
-with dai.Pipeline() as p:
-    remoteConnector = dai.RemoteConnection(
-        webSocketPort=args.webSocketPort, httpPort=args.httpPort
-    )
-    left = p.create(dai.node.Camera)
-    right = p.create(dai.node.Camera)
-    color = p.create(dai.node.Camera)
-    stereo = p.create(dai.node.NeuralDepth)
-    rgbd = p.create(dai.node.RGBD).build()
-    align = None
+# 3. Link Cameras to Stereo
+monoL.out.link(stereo.left)
+monoR.out.link(stereo.right)
+cloud = p.create(dai.node.PointCloud)
+stereo.depth.link(cloud.inputDepth) # This is why it was stalling!
+# 2. No XLinkOut needed! Just create an output queue directly from the node
+# This automatically handles the "XLink" bridge for you
+out_q = cloud.outputPointCloud.createOutputQueue()
 
-    color.build(sensorFps=FPS)
-    left.build(dai.CameraBoardSocket.CAM_B, sensorFps=FPS)
-    right.build(dai.CameraBoardSocket.CAM_C, sensorFps=FPS)
-
-    # Linking
-    stereo.build(left.requestFullResolutionOutput(), right.requestFullResolutionOutput(), dai.DeviceModelZoo.NEURAL_DEPTH_LARGE)
-    out = color.requestOutput((1280, 800), dai.ImgFrame.Type.RGB888i, enableUndistortion=True)
-    align = p.create(dai.node.ImageAlign)
-    stereo.depth.link(align.input)
-    out.link(align.inputAlignTo)
-    align.outputAligned.link(rgbd.inDepth)
-    out.link(rgbd.inColor)
-    remoteConnector.addTopic("pcl", rgbd.pcl, "common")
-
-    p.start()
-    remoteConnector.registerPipeline(p)
-
-    while p.isRunning():
-        key = remoteConnector.waitKey(1)
-        if key == ord("q"):
-            print("Got q key from the remote connection!")
-            break
+# 3. Start and Save
+p.start() 
+while p.isRunning():
+    # Retrieve the message
+    pcl_msg = out_q.get() 
+    print('made it')
+    points = pcl_msg.getPoints() # Get the (x,y,z) array
+    
+    if len(points.shape) != 2:
+        points = points.reshape(-1, 3)
+    # Save it
+    np.save("cloud_v3.npy", points)
+    print("Point cloud saved.")
+    break
