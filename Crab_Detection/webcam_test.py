@@ -1,59 +1,69 @@
 import cv2
+import depthai as dai
 from ultralytics import YOLO
 
-# 1. Load your trained model
-# Ensure 'best.pt' is in the same directory or provide the full path
-model = YOLO(r'Crab_Detection\best.pt')
+# 1. Load your YOLO model
+model = YOLO(r'C:\Users\User\ROV\X18-CV\Crab_Detection\best.pt')
 
-# 2. Access the webcam
-# '0' is usually the default integrated laptop camera
-cap = cv2.VideoCapture(0)
+# Create the pipeline
+pipeline = dai.Pipeline()
 
-if not cap.isOpened():
-    print("Error: Could not open webcam.")
-    exit()
+# 2. Explicitly create the ColorCamera node
+cam_rgb = pipeline.create(dai.node.ColorCamera)
+cam_rgb.setBoardSocket(dai.CameraBoardSocket.CAM_A) # Standard for OAK-D center camera
+cam_rgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
+cam_rgb.setInterleaved(False)
+cam_rgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.BGR)
+cam_rgb.setFps(30)
 
-print("Press 'q' to quit the video stream.")
+# 3. Explicitly create the XLinkOut node
+xout_video = pipeline.create(dai.node.XLinkOut)
+xout_video.setStreamName("video")
 
-while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    if not ret:
-        print("Error: Failed to grab frame.")
-        break
+# 4. Link the camera output to the XLink input
+cam_rgb.video.link(xout_video.input)
 
-    # 3. Run YOLOv8 inference on the frame
-    # We set stream=True for better performance with video
-    # .predict() is used for live inference
-    results = model.predict(source=frame, conf=0.5, show=False, stream=True)
+# Connect to the OAK-D device and start the pipeline
+with dai.Device(pipeline) as device:
+    # Get the output queue for the "video" stream defined above
+    q_video = device.getOutputQueue(name="video", maxSize=4, blocking=False)
 
-    for r in results:
-        # 4. Count the specific Invasive Crab (Class 0)
-        # Assuming 0: GreenCrab, 1: RockCrab, 2: JonahCrab
-        count_green = (r.boxes.cls == 0).sum().item()
+    print("MATE ROV: OAK-D Online. Press 'q' to quit.")
 
-        # 5. Visualize the detections
-        # This draws the boxes and labels on the frame
+    while True:
+        # 5. Retrieve the frame from the OAK-D hardware
+        in_video = q_video.get() 
+        frame = in_video.getCvFrame()
+
+        # 6. Run YOLOv8 inference on the frame
+        # verbose=False keeps your terminal clean from prediction logs
+        results = model(frame, conf=0.5, verbose=False)
+        r = results[0]
+
+        # 7. Count specifically the Invasive Green Crab (Class 0)
+        count_green = 0
+        if len(r.boxes) > 0:
+            # We filter for class 0 and sum up the occurrences
+            count_green = (r.boxes.cls == 0).sum().item()
+
+        # 8. Visualize detections and overlay the count
         annotated_frame = r.plot()
-
-        # 6. Add the Count Overlay (Competition Requirement)
+        
         cv2.putText(
-            annotated_frame, 
-            f"Green Crabs: {int(count_green)}", 
-            (20, 50), 
-            cv2.FONT_HERSHEY_SIMPLEX, 
-            1, 
-            (0, 255, 0), 
-            2
+            annotated_frame,
+            f"European Green Crabs: {int(count_green)}",
+            (40, 70), # Positioning the text
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1.5,
+            (0, 255, 0), # Green color in BGR
+            3
         )
 
-        # Display the resulting frame
-        cv2.imshow('MATE ROV - Crab Detection Test', annotated_frame)
+        # 9. Display the video feed
+        cv2.imshow("ROV Underwater Vision", annotated_frame)
 
-    # 7. Exit logic: Press 'q' on the keyboard to stop
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        # Break the loop if 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-# When everything done, release the capture and close windows
-cap.release()
 cv2.destroyAllWindows()
