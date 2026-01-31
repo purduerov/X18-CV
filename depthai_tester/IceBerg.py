@@ -42,32 +42,38 @@ mouse_x, mouse_y = 320, 200 # Default to center
 
 length = -1
 
+def get_cm(y_pos, cy, fy, z):
+    return (y_pos - cy) * z / fy
+
 def find_length(frame_depth, center_x, center_y, fy, cy):
     global length
     z_ref = frame_depth[center_y, center_x]
     z_temp = z_ref
     top = center_y
+    y_top = 0
     while(top > 1):
         z_i = frame_depth[top, center_x]
-        if abs(z_i - z_temp) > 5:
-           top = (top - cy) * z_i / fy
-           break 
+        if abs(np.int32(z_i) - np.int32(z_temp)) > 50:
+            y_top = top + 1
+            top = get_cm(y_top, cy, fy, z_temp)
+            break 
         z_temp = z_i
         top -=1
     bottom = center_y
+    y_bottom = 0
     while (bottom < center_y * 2):
         z_i = frame_depth[bottom, center_x]
-        if abs(z_i - z_temp) > 5:
-           bottom = (bottom - cy) * z_i / fy
-           break 
+        if abs(np.int32(z_i) - np.int32(z_temp)) > 50:
+            y_bottom = bottom - 1
+            bottom = get_cm(y_bottom, cy, fy, z_temp)
+            break 
         z_temp = z_i
         bottom += 1
-    length = abs(bottom - top)
+    length = abs(bottom - top) / 10
+    return y_top, y_bottom
 
-def mouse_callback(event, x, y, flags, param):
-    global mouse_x, mouse_y
-    if event == cv2.EVENT_MOUSEMOVE:
-        mouse_x, mouse_y = x, y
+top = -1
+bottom = -1
 
 with dai.Device(pipeline) as device:
     q_depth = device.getOutputQueue(name="depth", maxSize=4, blocking=False)
@@ -94,8 +100,6 @@ with dai.Device(pipeline) as device:
     cv2.moveWindow("disp", 100, 100)
     cv2.moveWindow("RGB", 100, 100)
 
-    cv2.setMouseCallback("RGB", mouse_callback)
-    cv2.setMouseCallback("disp", mouse_callback)
     while True:
         frame_depth = q_depth.get().getFrame()
         frame_rgb = q_rgb.get().getCvFrame()
@@ -109,13 +113,16 @@ with dai.Device(pipeline) as device:
         z = frame_depth[mouse_y, mouse_x]
 
         if z > 0:
-            x_mm = (mouse_x - cx) * z / fx
-            y_mm = (mouse_y - cy) * z / fy
+            x_mm = get_cm(mouse_x, cx, fx, z)
+            y_mm = get_cm(mouse_y, cy, fy, z)
+            if x_mm != (mouse_x - cx) * z / fx or y_mm != (mouse_y - cy) * z / fy:
+                print('FAAAAH')
+                exit(0)
             label = f"X: {int(x_mm/10)} Y: {int(y_mm/10)} Z: {int(z/10)} in cm"
         else:
             label = "Z: Invalid (Too close or low texture)"
             color = (0, 0, 255) # Red for invalid
-        label += f" Length is {length}"
+        label += f" Length is {length:.2f}"
         # UI Overlay
         disp_frame = cv2.normalize(frame_depth, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
         disp_frame = cv2.applyColorMap(disp_frame, cv2.COLORMAP_JET)
@@ -134,9 +141,14 @@ with dai.Device(pipeline) as device:
                markerType=cv2.MARKER_CROSS, 
                markerSize=30, 
                thickness=2)
+        if bottom != -1 and top != -1:
+            cv2.circle(disp_frame, (center_x // 2, top), 5, (255, 255, 255), -1)
+            cv2.circle(disp_frame, (center_x // 2, bottom), 5, (255, 255, 255), -1)
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+            break
+        if key == ord('e'):
+            top, bottom = find_length(frame_depth, center_x // 2, center_y // 2, fy, cy)
+            y_top = get_cm(top, cy, fy, z)
         cv2.imshow("RGB", frame_rgb)
         cv2.imshow("disp", disp_frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
-        elif cv2.waitKey(1) == ord('e'):
-            find_length(frame_depth, center_x // 2, center_y // 2, fy, cy)
