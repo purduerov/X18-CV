@@ -145,6 +145,7 @@ with dai.Device(pipeline) as device:
             bottom_coord = (center_x // 2, bottom)
             top_coord = (center_x // 2, top) 
             cv2.line(disp_frame, bottom_coord, top_coord, (255, 0, 0), 5)
+            cv2.line(frame_rgb, bottom_coord, top_coord, (255, 0, 0), 5)
         key = cv2.waitKey(1)
         if key == ord('q'):
             break
