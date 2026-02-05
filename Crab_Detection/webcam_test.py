@@ -56,7 +56,7 @@ with dai.Device(pipeline) as device:
             cv2.FONT_HERSHEY_SIMPLEX,
             1.5,
             (0, 255, 0),
-            3
+            2
         )
 
         cv2.imshow("ROV Crab Detection (v2)", annotated)
