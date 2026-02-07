@@ -3,7 +3,7 @@ import depthai as dai
 from ultralytics import YOLO
 
 # 1. Load model
-model = YOLO(r'C:\Users\User\ROV\X18-CV\Crab_Detection\best.pt')
+model = YOLO(r'best.pt')
 
 # 2. Setup v2 Pipeline
 pipeline = dai.Pipeline()

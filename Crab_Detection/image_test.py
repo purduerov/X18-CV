@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO(r"C:\Users\User\ROV\X18-CV\Crab_Detection\best.pt")
+model = YOLO(r"best.pt")
 
 image_path = r"C:\Users\User\ROV\X18-CV\Crab_Detection\Competition_Image.png"
 
