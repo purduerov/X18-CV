@@ -2,6 +2,7 @@ import cv2
 import depthai as dai
 import numpy as np
 
+ALPHA = 1.0
 pipeline = dai.Pipeline()
 
 # Nodes
@@ -101,7 +102,7 @@ with dai.Device(pipeline) as device:
     cv2.moveWindow("RGB", 100, 100)
 
     while True:
-        frame_depth = q_depth.get().getFrame()
+        frame_depth = q_depth.get().getFrame() * ALPHA
         frame_rgb = q_rgb.get().getCvFrame()
 
         # Boundary check to prevent crashing if mouse is at the very edge
