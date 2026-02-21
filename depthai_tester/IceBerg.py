@@ -106,42 +106,7 @@ def find_length(frame_depth, center_x, center_y, fy, cy):
 
     length = abs(phys_bottom - phys_top) / 10.0 # cm
     return y_top, y_bottom
-    z_ref = frame_depth[center_y, center_x]
-    z_temp = z_ref
-    top = center_y
-    y_top = 0
-    while(top > 1):
-        z_i = frame_depth[top, center_x]
-        if z_i == 0:
-            top -= 1
-            continue
-        if abs(np.int32(z_i) - np.int32(z_temp)) > 100:
-            y_top = top + 1
-            break 
-        z_temp = z_i
-        top -= 1
-    bottom = center_y
-    y_bottom = 0
-    while (bottom < center_y * 2):
-        z_i = frame_depth[bottom, center_x]
-        if z_i == 0: 
-            bottom += 1
-            continue
-        if abs(np.int32(z_i) - np.int32(z_temp)) > 100:
-            y_bottom = bottom - 1
-            break 
-        z_temp = z_i
-        bottom += 1
-    z_top = frame_depth[y_top, center_x]
-    z_bottom = frame_depth[y_bottom, center_x]
-
-    z_ref = frame_depth[center_y, center_x]
-    z_t = z_top if z_top > 0 else z_ref
-    z_b = z_bottom if z_bottom > 0 else z_ref
-    bottom = get_cm(y_bottom, cy, fy, z_b)
-    top = get_cm(y_top, cy, fy, z_t)
-    length = abs(bottom - top) / 10
-    return y_top, y_bottom
+    
 
 top = -1
 bottom = -1
