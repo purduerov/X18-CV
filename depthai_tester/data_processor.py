@@ -15,6 +15,7 @@ def mouse_callback(event, x, y, flags, param):
           mouse_x, mouse_y = x, y
 
 def run_ts(frame_depth, frame_rgb, intrinsics):
+  global mouse_x, mouse_y
   fx, fy, cx, cy = intrinsics[0][0], intrinsics[1][1], intrinsics[0][2], intrinsics[1][2]
   
 
@@ -74,9 +75,21 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
 
     cv2.imshow("disp", disp_frame)
     cv2.imshow('RGB', frame_rgb)
-    key = cv2.waitKey(1)
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == 255:
+      continue
+    
     if key == ord('q'):
       break
+    elif key == 82:
+      mouse_y -= 1
+    elif key == 84:
+      mouse_y += 1
+    elif key == 81:
+      mouse_x -= 1
+    elif key == 83:
+      mouse_x += 1
     elif key == ord('e'):
       points[index] = (mouse_x, mouse_y, z)
       index += 1
