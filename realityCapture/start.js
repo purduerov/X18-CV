@@ -50,8 +50,8 @@ var server = app.listen(app.get('port'), function () {
 // Initialize the 2-legged OAuth2 client, and
 // set specific scopes
 //-------------------------------------------------------------------
-var FORGE_CLIENT_ID = process.env.FORGE_CLIENT_ID || 'ruLkts3hrnYBcWUnN76pSU5UJfsS44bqZGApQmYEise3USDq';
-var FORGE_CLIENT_SECRET = process.env.FORGE_CLIENT_SECRET || 'foPeY8PCbI7ZWhM9NMiM8hvazEV0UFCjliGaUYp1oMlRbbCsk7AJ0NhDGVWoeu2o';
+var FORGE_CLIENT_ID = 'Fy0FeIz3n3nwTbZGHZ1OjSLrKZeTffW3rGLjEDN4nbrGvZ16';
+var FORGE_CLIENT_SECRET = '55HpKnyWUGrlhCAoecXKc5wWxLRAHyDk2DEGFFh8liDj5x9pGxhTZP2tr0dGsYaD';
 var access_token = '';
 var scopes = 'data:read data:write';
 const querystring = require('querystring');
@@ -65,46 +65,51 @@ const querystring = require('querystring');
 // For Imgur: Use format https://i.imgur.com/IMAGE_ID.jpg (not https://imgur.com/IMAGE_ID)
 // IMPORTANT: Forge Photo-to-3D API ONLY accepts JPG/JPEG format, NOT PNG!
 // The URLs must return raw image data with Content-Type: image/jpeg, not HTML pages
+
+let dynamicPhotoUrls = [];
+
+app.post('/api/photos', function (req, res) {
+    const url = req.body.url;
+
+    if (!url) {
+        return res.status(400).send({ error: "No URL provided" });
+    }
+
+    dynamicPhotoUrls.push(url);
+    console.log("Received URL:", url);
+
+    res.send({ success: true });
+});
+
 var CUSTOM_PHOTO_URLS = [
-    'https://i.imgur.com/wGgXOKW.jpg',
-    'https://i.imgur.com/XGQmliC.jpg',
-    'https://i.imgur.com/HFXXmyr.jpg',
-    'https://i.imgur.com/zhT8gHH.jpg',
-    'https://i.imgur.com/t8K4FVe.jpg',
-    'https://i.imgur.com/uAqiUec.jpg',
-    'https://i.imgur.com/3XSSjfC.jpg',
-    'https://i.imgur.com/lMa7nSe.jpg',
-    'https://i.imgur.com/8Rc3TU9.jpg',
-    'https://i.imgur.com/XS4B2rE.jpg',
-    'https://i.imgur.com/7a1SCjk.jpg',
-    'https://i.imgur.com/RvkHEFu.jpg',
-    'https://i.imgur.com/TS2hPXL.jpg',
-    'https://i.imgur.com/XUPBVmZ.jpg',
-    'https://i.imgur.com/sQm4s5t.jpg',
-    'https://i.imgur.com/yc9TGx2.jpg',
-    'https://i.imgur.com/IkCw4cv.jpg',
-    'https://i.imgur.com/OX021Jm.jpg',
-    'https://i.imgur.com/ZQpPuF7.jpg',
-    'https://i.imgur.com/mxSVZxz.jpg',
-    'https://i.imgur.com/rR4ssjB.jpg',
-    'https://i.imgur.com/IUGwMIj.jpg',
-    'https://i.imgur.com/MpwfqB7.jpg',
-    'https://i.imgur.com/iEaaJtS.jpg',
-    'https://i.imgur.com/YPjwgfT.jpg',
-    'https://i.imgur.com/iR6ZLiq.jpg',
-    'https://i.imgur.com/YMs5tue.jpg',
-    'https://i.imgur.com/Vma1J0X.jpg',
-    'https://i.imgur.com/0hF9Dxm.jpg',
-    'https://i.imgur.com/tz58Qut.jpg',
-    'https://i.imgur.com/snleIZm.jpg',
-    'https://i.imgur.com/LaM6VEH.jpg',
-    'https://i.imgur.com/JOYmrcN.jpg',
-    'https://i.imgur.com/yVqnBVP.jpg',
-    'https://i.imgur.com/KjzoYER.jpg',
-    'https://i.imgur.com/x0KnmJ2.jpg',
-    'https://i.imgur.com/wLmvNX9.jpg',
-    'https://i.imgur.com/3e9PTWK.jpg',
-    'https://i.imgur.com/e7sv1jD.jpg'
+    'https://i.imgur.com/HDWBLJU.jpeg',
+    'https://i.imgur.com/GFtH2Q8.jpeg',
+    'https://i.imgur.com/JSsrhLn.jpeg',
+    'https://i.imgur.com/8VfdPr8.jpeg',
+    'https://i.imgur.com/4zmIt05.jpeg',
+    'https://i.imgur.com/aryI6h4.jpeg',
+    'https://i.imgur.com/7LT76ft.jpeg',
+    'https://i.imgur.com/mEoOtck.jpeg',
+    'https://i.imgur.com/yI1lML3.jpeg',
+    'https://i.imgur.com/eCne9EM.jpeg',
+    'https://i.imgur.com/u2LmvfG.jpeg',
+    'https://i.imgur.com/g8OVM3s.jpeg',
+    'https://i.imgur.com/3YHx7Y7.jpeg',
+    'https://i.imgur.com/juo77Cp.jpeg',
+    'https://i.imgur.com/2Er8nrq.jpeg',
+    'https://i.imgur.com/oHI8LR4.jpeg',
+    'https://i.imgur.com/J9ezzKB.jpeg',
+    'https://i.imgur.com/KRaZCKE.jpeg',
+    'https://i.imgur.com/Vzgu7uz.jpeg',
+    'https://i.imgur.com/3lH1mxc.jpeg',
+    'https://i.imgur.com/n949Fjc.jpeg',
+    'https://i.imgur.com/n7pcUCB.jpeg',
+    'https://i.imgur.com/4ejl5KU.jpeg',
+    'https://i.imgur.com/pN0Mr5P.jpeg',
+    'https://i.imgur.com/6c3DcB5.jpeg',
+    'https://i.imgur.com/nH4Z2KN.jpeg',
+    'https://i.imgur.com/myUgyGk.jpeg',
+    'https://i.imgur.com/PMj3i5z.jpeg'
 ]; // Set to null to use local photos or sample photos
 
 // Option 2: Use ngrok for local photos
@@ -393,6 +398,33 @@ app.get('/api/ngrok/url', function (req, res) {
             res.json({ error: 'Ngrok not running or not accessible. Make sure ngrok is running on port 4040', success: false });
         });
 });
+app.post('/api/photos', function (req, res) {
+    const url = req.body.url;
+
+    if (!url) {
+        return res.status(400).send({ error: "No URL provided" });
+    }
+
+    dynamicPhotoUrls.push(url);
+
+    console.log(" New URL:", url);
+    console.log(" Current array:", dynamicPhotoUrls);
+
+    res.send({ success: true });
+});
+app.get('/api/photos', (req, res) => {
+    console.log(" Fetching current URLs:", dynamicPhotoUrls);
+    res.json(dynamicPhotoUrls);
+});
+
+app.post('/api/photos/reset', (req, res) => {
+    dynamicPhotoUrls = [];
+    console.log(" Array reset:", dynamicPhotoUrls);
+
+    res.send({ success: true });
+});
+
+
 
 // Route /api/forge/recap/photoscene/upload
 // Adds one or more files to a photoscene.
@@ -404,10 +436,13 @@ app.get('/api/forge/recap/photoscene/upload', function (req, res) {
     var photoFiles = [];
     
     // Option 1: Use custom photo URLs if configured
-    if (CUSTOM_PHOTO_URLS && CUSTOM_PHOTO_URLS.length > 0) {
+    /*if (CUSTOM_PHOTO_URLS && CUSTOM_PHOTO_URLS.length > 0) {
         photoUrls = CUSTOM_PHOTO_URLS;
         console.log('Using ' + photoUrls.length + ' custom photo URL(s)');
-    } else {
+    }*/
+    if (dynamicPhotoUrls.length > 0) {
+        photoUrls = dynamicPhotoUrls;
+    }  else {
         // Option 2: Check for local photos
         var photosDir = path.join(__dirname, 'photos');
         if (fs.existsSync(photosDir)) {
