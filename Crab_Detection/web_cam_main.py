@@ -7,6 +7,8 @@ model = YOLO(r'best.pt')
 # 2. Setup Laptop Webcam
 # '0' is usually the built-in webcam. Try '1' or '2' if you have an external USB cam.
 cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture("rtsp://192.168.1.51:8554/camera_1")
+
 
 if not cap.isOpened():
     print("Error: Could not open webcam.")
@@ -23,7 +25,7 @@ while True:
 
     # 3. Run YOLO inference 
     # Increased confidence to 0.85 to reduce false positives
-    results = model(frame, conf=0.73, verbose=False)
+    results = model(frame, conf=0.75, verbose=False)
     r = results[0]
 
     # 4. Logic & Terminal Output
