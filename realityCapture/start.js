@@ -50,8 +50,8 @@ var server = app.listen(app.get('port'), function () {
 // Initialize the 2-legged OAuth2 client, and
 // set specific scopes
 //-------------------------------------------------------------------
-var FORGE_CLIENT_ID = 'Fy0FeIz3n3nwTbZGHZ1OjSLrKZeTffW3rGLjEDN4nbrGvZ16';
-var FORGE_CLIENT_SECRET = '55HpKnyWUGrlhCAoecXKc5wWxLRAHyDk2DEGFFh8liDj5x9pGxhTZP2tr0dGsYaD';
+var FORGE_CLIENT_ID = 'x7eTsOPqR5SyhWEX7AhjrdPJn66D4TxKn3yKqSPz6uH9rtGj';
+var FORGE_CLIENT_SECRET = 'SznYHKjfbXJG016ZpVV7FztSohW8iVHizoZpxgACLl1Dt2DtUad7TWgKQyG4UAOx';
 var access_token = '';
 var scopes = 'data:read data:write';
 const querystring = require('querystring');
@@ -80,38 +80,38 @@ app.post('/api/photos', function (req, res) {
 
     res.send({ success: true });
 });
-
+/*
 var CUSTOM_PHOTO_URLS = [
-    'https://i.imgur.com/HDWBLJU.jpeg',
-    'https://i.imgur.com/GFtH2Q8.jpeg',
-    'https://i.imgur.com/JSsrhLn.jpeg',
-    'https://i.imgur.com/8VfdPr8.jpeg',
-    'https://i.imgur.com/4zmIt05.jpeg',
-    'https://i.imgur.com/aryI6h4.jpeg',
-    'https://i.imgur.com/7LT76ft.jpeg',
-    'https://i.imgur.com/mEoOtck.jpeg',
-    'https://i.imgur.com/yI1lML3.jpeg',
-    'https://i.imgur.com/eCne9EM.jpeg',
-    'https://i.imgur.com/u2LmvfG.jpeg',
-    'https://i.imgur.com/g8OVM3s.jpeg',
-    'https://i.imgur.com/3YHx7Y7.jpeg',
-    'https://i.imgur.com/juo77Cp.jpeg',
-    'https://i.imgur.com/2Er8nrq.jpeg',
-    'https://i.imgur.com/oHI8LR4.jpeg',
-    'https://i.imgur.com/J9ezzKB.jpeg',
-    'https://i.imgur.com/KRaZCKE.jpeg',
-    'https://i.imgur.com/Vzgu7uz.jpeg',
-    'https://i.imgur.com/3lH1mxc.jpeg',
-    'https://i.imgur.com/n949Fjc.jpeg',
-    'https://i.imgur.com/n7pcUCB.jpeg',
-    'https://i.imgur.com/4ejl5KU.jpeg',
-    'https://i.imgur.com/pN0Mr5P.jpeg',
-    'https://i.imgur.com/6c3DcB5.jpeg',
-    'https://i.imgur.com/nH4Z2KN.jpeg',
-    'https://i.imgur.com/myUgyGk.jpeg',
-    'https://i.imgur.com/PMj3i5z.jpeg'
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373103.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373125.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373128.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373129.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373130.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373131.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373132.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373134.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373135.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373139.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373144.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373150.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373154.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775373089/capture_1775373179.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375134.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375139.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375141.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375149.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375155.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375159.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375163.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375165.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375167.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375173.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375177.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375181.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375127/capture_1775375196.jpg',
+    'https://3d-reconstruction-cv.s3.us-east-2.amazonaws.com/runs/run_1775375215/capture_1775375275.jpg'
 ]; // Set to null to use local photos or sample photos
-
+*/
 // Option 2: Use ngrok for local photos
 // The code will try to auto-detect ngrok URL, or you can set it manually:
 // var NGROK_URL = 'https://abc123.ngrok.io';
@@ -398,6 +398,7 @@ app.get('/api/ngrok/url', function (req, res) {
             res.json({ error: 'Ngrok not running or not accessible. Make sure ngrok is running on port 4040', success: false });
         });
 });
+
 app.post('/api/photos', function (req, res) {
     const url = req.body.url;
 
@@ -442,7 +443,7 @@ app.get('/api/forge/recap/photoscene/upload', function (req, res) {
     }*/
     if (dynamicPhotoUrls.length > 0) {
         photoUrls = dynamicPhotoUrls;
-    }  else {
+    } else {
         // Option 2: Check for local photos
         var photosDir = path.join(__dirname, 'photos');
         if (fs.existsSync(photosDir)) {
