@@ -44,13 +44,13 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
     z2 = p1[1][2]
     x_mm2 = (p1[1][0] - cx) * z2 / fx
     y_mm2 = (p1[1][1] - cy) * z2 / fy
-    x_mm1, x_mm2 = np.int64(x_mm1), np.int64(x_mm2)
-    y_mm1, y_mm2 = np.int64(y_mm1), np.int64(y_mm2)
+    x_mm1, x_mm2 = np.float64(x_mm1), np.float64(x_mm2)
+    y_mm1, y_mm2 = np.float64(y_mm1), np.float64(y_mm2)
     length = np.sqrt(abs(x_mm1 - x_mm2)**2 + abs(y_mm1 - y_mm2)**2 + (z1 - z2)**2)
     height = abs(y_mm1 - y_mm2)
-    length = f'Length is {length/10}'
-    height = f'Height is {height/10}'
-    return length, height 
+    length = f'Length is {(length/10):.2f}'
+    height = f'Height is {(height/10):.2f}'
+    return length, height
 
   while True:
     z = frame_depth[mouse_y, mouse_x]
@@ -68,12 +68,14 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
     disp_frame = cv2.applyColorMap(disp_frame, cv2.COLORMAP_JET)
     cv2.putText(disp_frame, label, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
     label = height
-    cv2.putText(disp_frame, label, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    cv2.putText(disp_frame, label, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+    cv2.putText(disp_frame, label, (20, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
     cv2.circle(disp_frame, (mouse_x, mouse_y), 2, (255, 255, 255), -1)
     for point in points:
       cv2.circle(disp_frame, (point[0], point[1]), 2, (255, 255, 255), -1)
 
     cv2.imshow("disp", disp_frame)
+    # cv2.putText(frame_rgb, label, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
     cv2.imshow('RGB', frame_rgb)
     key = cv2.waitKey(1) & 0xFF
 

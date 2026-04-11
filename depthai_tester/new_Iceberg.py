@@ -65,6 +65,7 @@ top = -1
 pic_num = 0
 
 with dai.Device(pipeline) as device:
+    device.setIrLaserDotProjectorIntensity(200)
     q_depth = device.getOutputQueue(name="depth", maxSize=4, blocking=False)
     q_rgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
 
@@ -85,8 +86,6 @@ with dai.Device(pipeline) as device:
     cv2.resizeWindow("disp", 1280, 800)
     cv2.resizeWindow("rgb", 1280, 800)
 
-    # Move both to the EXACT same screen coordinates (X, Y)
-    # This stacks "RGB" directly on top of "disp"
     cv2.moveWindow("disp", 100, 100)
     cv2.moveWindow("rgb", 100, 100)
 
@@ -104,7 +103,7 @@ with dai.Device(pipeline) as device:
         else:
             label = "Z: Invalid (Too close or low texture)"
             color = (0, 0, 255) # Red for invalid
-        label += f' Length is {length:.2f}'
+        label += f' Length is {int(length)}'
         # UI Overlay
         disp_frame = cv2.normalize(frame_depth, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
         disp_frame = cv2.applyColorMap(disp_frame, cv2.COLORMAP_JET)
@@ -130,6 +129,7 @@ with dai.Device(pipeline) as device:
           np.save(output_dir / 'frame_depth.npy', frame_depth)
           np.save(output_dir / 'intrinsics.npy', intrinsics)
           np.save(output_dir / 'frame_rgb.npy', frame_rgb)
+          print('Thank you')
           pic_num += 1
         cv2.imshow("disp", disp_frame)
         cv2.imshow('rgb', frame_rgb)
