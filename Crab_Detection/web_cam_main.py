@@ -25,7 +25,7 @@ while True:
 
     # 3. Run YOLO inference 
     # Increased confidence to 0.85 to reduce false positives
-    results = model(frame, conf=0.75, verbose=False)
+    results = model(frame, conf=0.75, verbose=False, classes=[0])  # Only detect class 0 (Green Crabs)
     r = results[0]
 
     # 4. Logic & Terminal Output
