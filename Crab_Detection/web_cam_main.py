@@ -2,11 +2,11 @@ import cv2
 from ultralytics import YOLO
 
 # 1. Load your original model
-model = YOLO(r'best.pt')
+model = YOLO(r'best_v2.pt')
 
 # 2. Setup Laptop Webcam
 # '0' is usually the built-in webcam. Try '1' or '2' if you have an external USB cam.
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 #cap = cv2.VideoCapture("rtsp://192.168.1.51:8554/camera_1")
 
 
@@ -32,10 +32,12 @@ while True:
     count_green = 0
     if len(r.boxes) > 0:
         # Count only Green Crabs (Class 0)
-        count_green = (r.boxes.cls == 0).sum().item()
+        mask = (r.boxes.cls == 0)
+        #.sum().item()
+        r.boxes = r.boxes[mask]
     
     # Print result to terminal
-    print(f"Current Green Crab Count: {int(count_green)}")
+        print(f"Current Green Crab Count: {int(mask.sum().item())}")
 
     # 5. Visualization (Minimal)
     annotated_frame = r.plot()
@@ -47,5 +49,6 @@ while True:
         break
 
 # Cleanup
+
 cap.release()
 cv2.destroyAllWindows()
