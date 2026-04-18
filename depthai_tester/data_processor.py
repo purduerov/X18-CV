@@ -7,6 +7,13 @@ def get_data(dir):
   intrinsics = np.load(dir + 'intrinsics.npy')
   return frame_depth, frame_rgb, intrinsics
 
+rgb_mouse_x, rgb_mouse_y = 320, 200
+def rgb_mouse_callback(event, x, y, flags, param):
+      global rgb_mouse_x, rgb_mouse_y
+      if event == cv2.EVENT_MOUSEMOVE:
+          rgb_mouse_x, rgb_mouse_y = x, y
+
+
 mouse_x, mouse_y = 320, 200 # Default to center
 
 def mouse_callback(event, x, y, flags, param):
@@ -18,7 +25,6 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
   global mouse_x, mouse_y
   fx, fy, cx, cy = intrinsics[0][0], intrinsics[1][1], intrinsics[0][2], intrinsics[1][2]
   
-
   cv2.namedWindow("disp", cv2.WINDOW_NORMAL)
   cv2.namedWindow("RGB", cv2.WINDOW_NORMAL)
 
@@ -35,6 +41,7 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
   points = [(0,0,0), (0,0,0)]
 
   cv2.setMouseCallback("disp", mouse_callback)
+  cv2.setMouseCallback("RGB", rgb_mouse_callback)
 
   def get_length(p1):
     z1 = p1[0][2]
@@ -75,8 +82,10 @@ def run_ts(frame_depth, frame_rgb, intrinsics):
       cv2.circle(disp_frame, (point[0], point[1]), 2, (255, 255, 255), -1)
 
     cv2.imshow("disp", disp_frame)
-    # cv2.putText(frame_rgb, label, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-    cv2.imshow('RGB', frame_rgb)
+    frame_cpy = frame_rgb.copy()
+    label = f'Mouse x: {rgb_mouse_x}, Mouse y: {rgb_mouse_y}'
+    cv2.putText(frame_cpy, label, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+    cv2.imshow('RGB', frame_cpy)
     key = cv2.waitKey(1) & 0xFF
 
     if key == 255:

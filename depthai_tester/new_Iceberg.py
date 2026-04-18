@@ -8,7 +8,7 @@ DATA_FILE = 'img.pkl'
 pipeline = dai.Pipeline()
 
 # Nodes
-cam_rgb = pipeline.create(dai.node.ColorCamera)
+cam_rgb = pipeline.create(dai.node.Camera)
 monoLeft = pipeline.create(dai.node.MonoCamera)
 monoRight = pipeline.create(dai.node.MonoCamera)
 stereo = pipeline.create(dai.node.StereoDepth)
@@ -20,7 +20,7 @@ xout_depth.setStreamName("depth")
 xout_rgb.setStreamName("rgb")
 
 cam_rgb.setPreviewSize(640, 400)
-cam_rgb.setInterleaved(False)
+# cam_rgb.setInterleaved(False)
 cam_rgb.setBoardSocket(dai.CameraBoardSocket.CAM_A)
 monoLeft.setResolution(dai.MonoCameraProperties.SensorResolution.THE_400_P)
 monoRight.setResolution(dai.MonoCameraProperties.SensorResolution.THE_400_P)

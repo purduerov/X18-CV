@@ -3,7 +3,7 @@ import depthai as dai
 from ultralytics import YOLO
 
 # 1. Load model
-model = YOLO(r'best.pt')
+model = YOLO(r'best_v2.pt')
 
 # 2. Setup v2 Pipeline
 pipeline = dai.Pipeline()
@@ -37,7 +37,7 @@ with dai.Device(pipeline) as device:
 
         # Run YOLO inference
         # Change 0.5 to 0.7 or 0.8 to be more "strict"
-        results = model(frame, conf=0.75, verbose=False)
+        results = model(frame, conf=0.65, verbose=False)
         r = results[0]
 
         # Count Green Crabs (Class 0)
