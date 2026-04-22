@@ -1,1 +1,0 @@
-Put all test images in this folder, but please do not push it up :)
