@@ -1,5 +1,26 @@
 import math
 
+def rotate_point_around_z(point, pivot, theta):
+    # Convert angle to radians
+    cos_theta = math.cos(theta)
+    sin_theta = math.sin(theta)
+    
+    # Unpack 3D coordinates (X=side, Y=up, Z=depth)
+    x, y, z = point
+    cx, cy, cz = pivot
+    
+    # 1. Translate point so pivot is at origin (Y and Z only)
+    ty = y - cy
+    tz = z - cz
+    
+    # 2. Apply rotation to Y and Z
+    # Standard right-handed rotation around Y:
+    new_y = (ty * cos_theta) + (-tz * sin_theta)
+    new_z = (ty * sin_theta) + (tz * cos_theta)
+    
+    # 3. Translate back, X remains the same
+    return (x, new_y + cy, new_z + cz)
+
 def rotate_point_around_y(point, pivot, theta):
     # Convert angle to radians
     cos_theta = math.cos(theta)
@@ -38,6 +59,10 @@ def get_coords(matrix):
     new_y /= matrix[2]
     return new_x, new_y
 
+def produce_coords(coord, pivot, angle):
+    rotated = rotate_point_around_y(coord, pivot, angle)
+    return get_coords(rotated)
+
 def calc_length(X_height, known_length, var_length):
     hypo = 3.44 * X_height
     X_depth = math.sqrt(hypo**2 - known_length**2)
@@ -48,17 +73,18 @@ def calc_length(X_height, known_length, var_length):
     angle = math.acos(known_length / hypo)
     new_point = (known_length, var_length, 0)
     
-    top_var = get_coords(rotate_point_around_y(new_point, pivot, -angle))
+    top_var = produce_coords(new_point, pivot, -angle)
     new_point = (known_length, 0, 0)
-    bottom_var = get_coords(rotate_point_around_y(new_point, pivot, -angle))
+    bottom_var = produce_coords(new_point, pivot, -angle)
     known_height = abs(top_x[1] - bottom_x[1])
     var_height = abs(top_var[1] - bottom_var[1])
     ratio = var_height / known_height
     print(f'Predicted Height is {ratio * 7}')
-    print(top_x)
-    print(bottom_x)
-    print(top_var)
-    print(bottom_var)
+    # print(top_x)
+    # print(bottom_x)
+    # print(top_var)
+    # print(bottom_var)
+calc_length(35, 47.16, 200)
 calc_length(26, 80, 190)
 
 def test():

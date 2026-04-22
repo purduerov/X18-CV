@@ -2,14 +2,14 @@ import cv2
 import numpy as np
 
 def get_data(dir):
-  frame_rgb = cv2.imread('test.jpg')
+  frame_rgb = cv2.imread('test1.jpg')
   return frame_rgb
 
-rgb_mouse_x, rgb_mouse_y = 320, 200
+mouse_x, mouse_y = 320, 200
 def rgb_mouse_callback(event, x, y, flags, param):
-      global rgb_mouse_x, rgb_mouse_y
+      global mouse_x, mouse_y
       if event == cv2.EVENT_MOUSEMOVE:
-          rgb_mouse_x, rgb_mouse_y = x, y
+          mouse_x, mouse_y = x, y
 
 
 
@@ -33,8 +33,9 @@ def run_ts(frame_depth):
 
   while True:
     frame_cpy = frame_rgb.copy()
-    label = f'Mouse x: {rgb_mouse_x}, Mouse y: {rgb_mouse_y}'
+    label = f'Mouse x: {mouse_x}, Mouse y: {mouse_y}'
     cv2.putText(frame_cpy, label, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+    cv2.circle(frame_cpy, (mouse_x, mouse_y), 0, (0, 0, 255), -1)
     cv2.imshow('RGB', frame_cpy)
     key = cv2.waitKey(1) & 0xFF
 
