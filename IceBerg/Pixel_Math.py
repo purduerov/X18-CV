@@ -79,13 +79,13 @@ def calc_length(X_height, known_length, var_length):
     known_height = abs(top_x[1] - bottom_x[1])
     var_height = abs(top_var[1] - bottom_var[1])
     ratio = var_height / known_height
-    print(f'Predicted Height is {ratio * 7}')
+    print(f'Predicted Height is {ratio * 15}')
     # print(top_x)
     # print(bottom_x)
     # print(top_var)
     # print(bottom_var)
-calc_length(35, 47.16, 200)
-calc_length(26, 80, 190)
+calc_length(33, 88, 156)
+# calc_length(26, 80, 190)
 
 def test():
     p = (1, 1, 1)
