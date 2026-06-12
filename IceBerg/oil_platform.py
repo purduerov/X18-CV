@@ -1,10 +1,10 @@
 import math
 
+NAUTICAL_MILE = 60.0
+
 def assess_risk(iceberg, platform):
-  if iceberg['Keel Depth'] > 0:
-    iceberg['Keel Depth'] *= -1
-  if platform['Depth'] > 0:
-    platform['Depth'] *= -1
+  iceberg['Keel Depth'] = abs(iceberg['Keel Depth'])
+  platform['Depth'] = abs(platform['Depth'])
 
   heading_radians = math.radians(iceberg['Heading'])
   dx = math.sin(heading_radians)
@@ -63,16 +63,18 @@ def dms_to_decimal(degrees, minutes, seconds, direction):
     return decimal
 
 iceberg = {
-  'x': dms_to_decimal(47, 39, 0, 'N'),
-  'y': dms_to_decimal(48, 37, 0, 'W'),
+  'x': dms_to_decimal(48, 37, 0, 'W') * NAUTICAL_MILE, # Longitude E/W
+  'y': dms_to_decimal(47, 39, 0, 'N') * NAUTICAL_MILE, # Latitude N/S
   'Heading': 158.0,
   'Keel Depth': 99.0
 }
 
 platform = {
-  'x': 46.7504,
-  'y': -48.7819 ,
+  'x': -48.7819 * NAUTICAL_MILE, # Longitude E/W
+  'y': 46.7504 * NAUTICAL_MILE, # Latitude N/S
   'Depth': -78
 }
 
-print(assess_risk(iceberg, platform))
+platform, subsea = assess_risk(iceberg, platform)
+
+print(f'Platform risk is ({platform})\nSubsea   risk is ({subsea})')
