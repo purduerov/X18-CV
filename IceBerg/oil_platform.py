@@ -23,7 +23,7 @@ def assess_risk(iceberg, platform):
   if dot_product < 0:
     closest_distance = math.sqrt(v_x**2 + v_y**2)
 
-  if closest_distance <= 5:
+  if closest_distance < 5:
     platform_color = 'Red'
   elif closest_distance <= 10:
     platform_color = 'Yellow'
