@@ -84,8 +84,8 @@ def calc_length(X_height, known_length, var_length):
     # print(bottom_x)
     # print(top_var)
     # print(bottom_var)
-calc_length(33, 88, 156)
-# calc_length(26, 80, 190)
+    
+calc_length(26, 80, 190)
 
 def test():
     p = (1, 1, 1)
