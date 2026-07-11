@@ -65,6 +65,9 @@ def produce_coords(coord, pivot, angle):
 
 def calc_length(X_height, known_length, var_length):
     hypo = 3.44 * X_height
+    if abs((known_length / X_height) - 3.44) < 0.1:
+        print((var_length / X_height) * 15)
+        return
     X_depth = math.sqrt(hypo**2 - known_length**2)
     top_x = get_coords((0, 0, X_depth))
     bottom_x = get_coords((0, X_height, X_depth))
@@ -79,13 +82,13 @@ def calc_length(X_height, known_length, var_length):
     known_height = abs(top_x[1] - bottom_x[1])
     var_height = abs(top_var[1] - bottom_var[1])
     ratio = var_height / known_height
-    print(f'Predicted Height is {ratio * 7}')
+    print(f'Predicted Height is {ratio * 15}')
     # print(top_x)
     # print(bottom_x)
     # print(top_var)
     # print(bottom_var)
-calc_length(35, 47.16, 200)
-calc_length(26, 80, 190)
+    
+calc_length(82.02438661763951, 287.69602013236124, 355.27594908746636)
 
 def test():
     p = (1, 1, 1)

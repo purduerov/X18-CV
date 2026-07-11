@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def get_data(dir):
-  frame_rgb = cv2.imread('test1.jpg')
+  frame_rgb = cv2.imread('test.jpg')
   return frame_rgb
 
 mouse_x, mouse_y = 320, 200
